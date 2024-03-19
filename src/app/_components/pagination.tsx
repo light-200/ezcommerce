@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   CgChevronDoubleLeft,
   CgChevronDoubleRight,
@@ -23,8 +23,6 @@ export default function Pagination({
     handlePageSelect(i);
     setSelectedPage(i);
   };
-
-  const lastNum = 7;
 
   return (
     <div className="mt-4 flex items-center gap-2 text-gray-400">
