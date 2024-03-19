@@ -13,9 +13,22 @@ export const categoriesRouter = createTRPCRouter({
       });
     }),
 
+  update: publicProcedure
+    .input(z.object({ id: z.string().min(1), selected: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.categories.update({
+        data: {
+          selected: input.selected,
+        },
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.categories.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: { updatedAt: "desc" },
     });
   }),
 });
