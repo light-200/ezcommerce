@@ -47,7 +47,7 @@ export default function LoginForm() {
         </div>
         <Button>Login</Button>
         <p className="my-4 w-full text-center text-sm">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <span>
             <Link href={"/signup"} className="font-semibold">
               Sign Up

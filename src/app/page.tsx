@@ -4,8 +4,6 @@ import Card from "./_components/ui/card";
 import { useEffect, useState } from "react";
 import type { Categories } from "@prisma/client";
 import Pagination from "./_components/pagination";
-import { CgSpinner } from "react-icons/cg";
-import { FaSpinner } from "react-icons/fa";
 import { ImSpinner2 } from "react-icons/im";
 
 const PAGE_LENGTH = 6;
@@ -25,7 +23,7 @@ export default function Categories() {
     } else {
       alert("failed to fetch categories!");
     }
-  }, [cat.data]);
+  }, [cat.data, cat.error]);
 
   const handleSelectCategory = (category: Categories) => {
     updateCat.mutate({ id: category.id, selected: !category.selected });
