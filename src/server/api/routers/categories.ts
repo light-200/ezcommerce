@@ -28,7 +28,9 @@ export const categoriesRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.categories.findMany({
-      orderBy: { updatedAt: "desc" },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
 });

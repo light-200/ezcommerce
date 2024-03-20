@@ -1,6 +1,6 @@
 "use client";
 import { api } from "~/trpc/react";
-import Card from "./_components/card";
+import Card from "./_components/ui/card";
 import { useEffect, useState } from "react";
 import type { Categories } from "@prisma/client";
 import Pagination from "./_components/pagination";
@@ -64,7 +64,7 @@ export default function Categories() {
                   ?.slice(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH)
                   ?.map((category) => (
                     <li
-                      className="flex"
+                      className="flex gap-2"
                       key={category.id}
                       aria-disabled={updateCat.isPending}
                     >
@@ -72,6 +72,7 @@ export default function Categories() {
                         type="checkbox"
                         checked={category.selected}
                         onClick={() => handleSelectCategory(category)}
+                        className="accent-black"
                       />
                       <span>{category.name}</span>
                     </li>
