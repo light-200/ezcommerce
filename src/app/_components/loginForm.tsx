@@ -3,20 +3,21 @@ import { SyntheticEvent, useState } from "react";
 import Card from "./ui/card";
 import Link from "next/link";
 import Button from "./ui/button";
+import { useFormState } from "react-dom";
+import { login } from "~/lib/auth/actions";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
-    e.preventDefault();
-  };
+  const [state, formAction] = useFormState(login, null);
+
   return (
     <Card title="Login">
       <div className="gap-2 text-center">
         <h2 className="font-semibold">Welcome back to Ezcommerce</h2>
         <p className="text-sm">The next gen business marketplace.</p>
       </div>
-      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2">
+      <form action={formAction} className="flex w-full flex-col gap-2">
         <div className="flex flex-col gap-1">
           <label htmlFor="email" className="text-sm font-semibold">
             Email
