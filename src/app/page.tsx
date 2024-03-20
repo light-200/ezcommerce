@@ -5,10 +5,14 @@ import { useEffect, useState } from "react";
 import type { Categories } from "@prisma/client";
 import Pagination from "./_components/pagination";
 import { ImSpinner2 } from "react-icons/im";
+import { useSession } from "./_components/sessionContext";
+import { useRouter } from "next/navigation";
 
 const PAGE_LENGTH = 6;
 
 export default function Categories() {
+  const session = useSession();
+  const router = useRouter();
   const [categories, setCategories] = useState<Array<Categories> | undefined>(
     [],
   );
@@ -24,6 +28,14 @@ export default function Categories() {
       alert("failed to fetch categories!");
     }
   }, [cat.data, cat.error]);
+
+  if (!session.user) {
+    router.push("/login");
+  }
+
+  if (session.user && !session.user.emailVerified) {
+    router.push("/signup/verify");
+  }
 
   const handleSelectCategory = (category: Categories) => {
     updateCat.mutate({ id: category.id, selected: !category.selected });
@@ -61,16 +73,13 @@ export default function Categories() {
                 {categories
                   ?.slice(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH)
                   ?.map((category) => (
-                    <li
-                      className="flex gap-2"
-                      key={category.id}
-                      aria-disabled={updateCat.isPending}
-                    >
+                    <li className="flex gap-2" key={category.id}>
                       <input
                         type="checkbox"
                         checked={category.selected}
                         onClick={() => handleSelectCategory(category)}
                         className="accent-black"
+                        aria-disabled={updateCat.isPending}
                       />
                       <span>{category.name}</span>
                     </li>

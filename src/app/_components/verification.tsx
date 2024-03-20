@@ -5,16 +5,22 @@ import Card from "./ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 import { useState } from "react";
 import Button from "./ui/button";
+import { useSession } from "./sessionContext";
+import { resendVerificationEmail, verifyEmail } from "~/lib/auth/actions";
+import { useFormState, useFormStatus } from "react-dom";
 
 export default function Verify() {
   const [value, setValue] = useState("");
-  const email = "swa***@gmail.com";
+  const [state, formAction] = useFormState(verifyEmail, null);
+  const { user } = useSession();
+  const { pending } = useFormStatus();
+
   return (
     <Card title="Verify your email">
       <p className="mb-4 w-72 text-center text-sm">
-        Enter the 8 digit code you have received on {email}
+        Enter the 8 digit code you have received on {user?.email}
       </p>
-      <form className="flex flex-col gap-4">
+      <form action={formAction} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="otp" className="text-sm font-semibold">
             Code
@@ -24,6 +30,7 @@ export default function Verify() {
             maxLength={8}
             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
             value={value}
+            name="code"
             onChange={(value) => setValue(value)}
           >
             <InputOTPGroup>
@@ -38,7 +45,15 @@ export default function Verify() {
             </InputOTPGroup>
           </InputOTP>
         </div>
-        <Button>verify</Button>
+        <Button aria-disabled={pending}>verify</Button>
+      </form>
+      <form action={resendVerificationEmail}>
+        <Button
+          aria-disabled={pending}
+          className={"bg-white px-4 py-1 text-xs text-black"}
+        >
+          resend
+        </Button>
       </form>
     </Card>
   );

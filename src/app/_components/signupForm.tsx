@@ -3,22 +3,19 @@ import { SyntheticEvent, useState } from "react";
 import Card from "./ui/card";
 import Link from "next/link";
 import Button from "./ui/button";
+import { useFormState, useFormStatus } from "react-dom";
+import { signup } from "~/lib/auth/actions";
 
-export default function SignupForm({
-  handleStage,
-}: {
-  handleStage: (i: 1 | 2) => void;
-}) {
+export default function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
-    e.preventDefault();
-    handleStage(2);
-  };
+  const [state, formAction] = useFormState(signup, null);
+  const { pending } = useFormStatus();
+
   return (
     <Card title="Create your account">
-      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2">
+      <form action={formAction} className="flex w-full flex-col gap-2">
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-sm font-semibold">
             Name
@@ -62,7 +59,7 @@ export default function SignupForm({
             className="rounded-md border border-gray-200 p-2"
           />
         </div>
-        <Button>create account</Button>
+        <Button aria-disabled={pending}>create account</Button>
         <p className="my-4 w-full text-center text-sm">
           Have an account?{" "}
           <span>
