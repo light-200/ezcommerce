@@ -33,7 +33,7 @@ export default function Categories() {
     router.push("/login");
   }
 
-  if (!session.user?.emailVerified) {
+  if (session.user && !session.user.emailVerified) {
     router.push("/signup/verify");
   }
 
