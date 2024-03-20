@@ -8,13 +8,13 @@ import { generateId, Scrypt } from "lucia";
 import { isWithinExpirationDate, TimeSpan, createDate } from "oslo";
 import { generateRandomString, alphabet } from "oslo/crypto";
 import {
-  LoginInput,
+  type LoginInput,
   loginSchema,
-  SignupInput,
+  type SignupInput,
   signupSchema,
 } from "../validators/auth";
 import { db } from "~/server/db";
-import { lucia } from "~/auth";
+import { lucia } from "./index";
 import { sendMail } from "~/server/send-mail";
 import { renderVerificationCodeEmail } from "../email-templates/email-verification";
 import { validateRequest } from "./validate-request";
@@ -125,11 +125,16 @@ export async function signup(
   });
 
   const verificationCode = await generateEmailVerificationCode(userId, email);
-  await sendMail({
-    to: email,
-    subject: "Verify your account",
-    body: renderVerificationCodeEmail({ code: verificationCode }),
-  });
+  try {
+    await sendMail({
+      to: email,
+      subject: "Verify your account",
+      body: renderVerificationCodeEmail({ code: verificationCode }),
+    });
+  } catch (error) {
+    console.log(error);
+    console.error("failed to send mail!!");
+  }
 
   const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
@@ -251,14 +256,19 @@ async function generateEmailVerificationCode(
   userId: string,
   email: string,
 ): Promise<string> {
-  await db.emailVerificationCodes.delete({ where: { user_id: userId } });
+  const ecode = await db.emailVerificationCodes.findFirst({
+    where: { user_id: userId },
+  });
+  if (ecode) {
+    await db.emailVerificationCodes.delete({ where: { user_id: userId } });
+  }
   const code = generateRandomString(8, alphabet("0-9")); // 8 digit code
   await db.emailVerificationCodes.create({
     data: {
       user_id: userId,
       email,
       code,
-      expires_at: createDate(new TimeSpan(10, "m")), // 10 minutes
+      expires_at: createDate(new TimeSpan(1, "m")), // 10 minutes
     },
   });
   return code;

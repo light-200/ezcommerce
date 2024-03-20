@@ -1,14 +1,15 @@
 "use client";
-import { SyntheticEvent, useState } from "react";
+import { useState } from "react";
 import Card from "./ui/card";
 import Link from "next/link";
 import Button from "./ui/button";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { login } from "~/lib/auth/actions";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const { pending } = useFormStatus();
   const [state, formAction] = useFormState(login, null);
 
   return (
@@ -46,7 +47,7 @@ export default function LoginForm() {
             className="rounded-md border border-gray-200 p-2"
           />
         </div>
-        <Button>Login</Button>
+        <Button aria-disabled={pending}>Login</Button>
         <p className="my-4 w-full text-center text-sm">
           Don&apos;t have an account?{" "}
           <span>

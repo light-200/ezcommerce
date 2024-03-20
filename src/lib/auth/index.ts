@@ -18,6 +18,7 @@ export const lucia = new Lucia(adapter, {
       id: attributes.id,
       email: attributes.email,
       username: attributes.name,
+      emailVerified: attributes.emailVerified,
     };
   },
 });
@@ -27,10 +28,10 @@ declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
     DatabaseUserAttributes: DatabaseUserAttributes;
-    DatabaseSessionAttributes: DatabaseSessionAttributes;
   }
 }
 
-interface DatabaseSessionAttributes {}
-
-interface DatabaseUserAttributes extends Pick<User, "name" | "email" | "id"> {}
+type DatabaseUserAttributes = Pick<
+  User,
+  "name" | "email" | "id" | "emailVerified"
+>;

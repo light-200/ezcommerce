@@ -2,6 +2,7 @@ import { env } from "../env";
 import { createTransport, type TransportOptions } from "nodemailer";
 
 const smtpConfig = {
+  service: "gmail",
   host: env.SMTP_HOST,
   port: env.SMTP_PORT,
   auth: {

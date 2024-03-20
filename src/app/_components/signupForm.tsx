@@ -3,7 +3,7 @@ import { SyntheticEvent, useState } from "react";
 import Card from "./ui/card";
 import Link from "next/link";
 import Button from "./ui/button";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { signup } from "~/lib/auth/actions";
 
 export default function SignupForm() {
@@ -11,6 +11,7 @@ export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [state, formAction] = useFormState(signup, null);
+  const { pending } = useFormStatus();
 
   return (
     <Card title="Create your account">
@@ -58,7 +59,7 @@ export default function SignupForm() {
             className="rounded-md border border-gray-200 p-2"
           />
         </div>
-        <Button>create account</Button>
+        <Button aria-disabled={pending}>create account</Button>
         <p className="my-4 w-full text-center text-sm">
           Have an account?{" "}
           <span>
